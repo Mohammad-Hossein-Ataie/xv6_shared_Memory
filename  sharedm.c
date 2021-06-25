@@ -47,9 +47,16 @@ int sys_shm_init()
   return 1;
 }
 
-int sys_shm_open(int id, int page_count, int flag)
+int sys_shm_open()
 {
   int i, j;
+  int id, page_count, flag;
+  if(argint(0, &id) < 0)
+    return -1;
+  if(argint(1, &page_count) < 0)
+    return -1;
+  if(argint(2, &flag) < 0)
+    return -1;
   acquireticket(&(shm_table.lock));
   if(id <= 0)
   {
@@ -82,12 +89,16 @@ int sys_shm_open(int id, int page_count, int flag)
     return 1;
     }
   }
+  return 1;
 }
 
-void *sys_shm_attach(int id)
-{
+ void *sys_shm_attach()
+ {
   char* pointer = 0;
   int i, j;
+  int id;
+  if(argint(0, &id) < 0)
+    return pointer;
   acquireticket(&(shm_table.lock));
   for (i = 0; i < SHARED_MEMS_SIZE; i++) 
   {
@@ -95,9 +106,10 @@ void *sys_shm_attach(int id)
     {
       for( j = 0 ; j < shm_table.segments[i].size ; j++)
       {
-        if(myproc()->pid == shm_table.segments[i].owner || 
+        if(myproc()->pid == shm_table.segments[i].owner ||(
         (shm_table.segments[i].flags & ONLY_CHILD_CAN_ATTACH
-        && myproc()->parent->pid == shm_table.segments[i].owner))
+        && myproc()->parent->pid == shm_table.segments[i].owner) ||
+        (shm_table.segments[i].flags & ONLY_CHILD_CAN_ATTACH) == 0))
         {
           int flag;
           if(myproc()->pid == shm_table.segments[i].owner)
@@ -110,23 +122,25 @@ void *sys_shm_attach(int id)
           shm_table.segments[i].ref_count++;
           myproc()->sz += PGSIZE;
           if(j == 0)
-            pointer = (char *) PGROUNDUP(myproc()->sz);  
+            pointer = (void *) PGROUNDUP(myproc()->sz);   
         }
         else
             cprintf("shm_attach error : only child can attach to this segment\n");
       } 
     }
   }
-  if(pointer == 0)
 
   releaseticket(&(shm_table.lock));
   return pointer;
 }
 
 
-int sys_shm_close(int id) {
+int sys_shm_close() {
+  int id;
+  if(argint(0, &id) < 0)
+    return -1;
   acquireticket(&(shm_table.lock));
-  int i, j;
+  int i;
   for (i = 0; i< SHARED_MEMS_SIZE; i++) {
     if(shm_table.segments[i].id == id) {
       shm_table.segments[i].ref_count--;

@@ -27,6 +27,7 @@ OBJS = \
 	uart.o\
 	vectors.o\
 	vm.o\
+	sharedm.o\
  	reentrantlock.o\
 
 # Cross-compiling (e.g., on Mac OS X)
@@ -189,6 +190,7 @@ UPROGS=\
 	_set_sleep\
 	_get_ancestors\
 	_get_descendants\
+	_shmTest\
 	_zombie\
 	#_reentrantTest\
 
@@ -259,7 +261,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 
 EXTRA=\
 	mkfs.c ulib.c user.h lcm.c gpid_test.c test_trace.c calculate_BPS.c cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c shmTest.c zombie.c\
 	printf.c umalloc.c start_time.c set_sleep.c get_ancestors.c get_descendants.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\

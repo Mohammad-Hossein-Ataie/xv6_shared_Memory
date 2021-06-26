@@ -6,10 +6,10 @@
 [Part 5 (Shared Memory)](#pos)
 ## Group:
 
-1- Mohammad Hossein Ataie
+1- Kimia Fakhari kisomi
 
-2- Kimia Fakhari kisomi
+2- Negar Ghaderi
 
-3- Negar Ghaderi
+3- Mohammad Hossein Ataie
 
 
